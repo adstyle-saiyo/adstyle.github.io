@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>エニアグラム 上司×部下 コミュニケーション診断</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+ 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+  :root {
+    --blue-dark: #0C447C;
+    --blue-mid: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-text: #378ADD;
+    --green-dark: #27500A;
+    --green-light: #EAF3DE;
+    --amber-dark: #633806;
+    --amber-light: #FAEEDA;
+    --red-dark: #791F1F;
+    --red-light: #FCEBEB;
+    --purple-dark: #3C3489;
+    --purple-light: #EEEDFE;
+    --gray-dark: #444441;
+    --gray-light: #F1EFE8;
+    --border: #e2e0d8;
+    --text: #1a1a18;
+    --text-sub: #5f5e5a;
+    --text-hint: #888780;
+    --bg: #f8f7f4;
+    --card-bg: #ffffff;
+  }
+ 
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+ 
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--blue-mid);
+    color: #fff;
+    padding: 0.6rem 2rem;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .topbar svg { opacity: 0.7; }
+ 
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0C447C 0%, #185FA5 60%, #378ADD 100%);
+    color: #fff;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    font-size: 14px;
+    opacity: 0.75;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+ 
+  /* ── MAIN ── */
+  .main { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+ 
+  /* ── SELECTOR CARD ── */
+  .selector-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .selector-card h2 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-hint);
+    margin-bottom: 1rem;
+  }
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .type-btn {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    background: #fff;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .type-btn:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+  .type-btn .num {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-hint);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .type-btn .name {
+    font-size: 11px;
+    color: var(--text-sub);
+    line-height: 1.4;
+    display: block;
+  }
+  .type-btn.selected-boss { border-color: var(--blue-mid); background: var(--blue-light); }
+  .type-btn.selected-boss .num { color: var(--blue-mid); }
+  .type-btn.selected-boss .name { color: var(--blue-dark); }
+  .type-btn.selected-member { border-color: #3B6D11; background: var(--green-light); }
+  .type-btn.selected-member .num { color: #3B6D11; }
+  .type-btn.selected-member .name { color: var(--green-dark); }
+ 
+  /* selected indicator */
+  .selected-display {
+    margin-top: 1rem;
+    font-size: 13px;
+    color: var(--text-sub);
+    min-height: 20px;
+  }
+  .selected-display strong { color: var(--text); }
+ 
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 10px; margin-top: 1rem; }
+  .btn-diagnose {
+    flex: 1;
+    background: var(--blue-mid);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+  .btn-diagnose:hover { background: var(--blue-dark); }
+  .btn-diagnose:disabled { background: #b0b0a8; cursor: not-allowed; }
+  .btn-reset {
+    background: #fff;
+    color: var(--text-sub);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn-reset:hover { background: var(--bg); }
+ 
+  .err {
+    font-size: 13px;
+    color: #A32D2D;
+    margin-top: 8px;
+    display: none;
+  }
+ 
+  /* ── LOADING ── */
+  .ai-loading {
+    display: none;
+    text-align: center;
+    padding: 2.5rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-top: 1.5rem;
+  }
+  .ai-loading p { font-size: 13px; color: var(--text-sub); margin-top: 12px; }
+  .dots { display: flex; justify-content: center; gap: 6px; }
+  .dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue-mid);
+    animation: bounce 1.2s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.4);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+ 
+  /* ── RESULT ── */
+  #result { display: none; margin-top: 1.5rem; animation: fadeUp 0.45s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+ 
+  .result-hero {
+    background: linear-gradient(135deg, #0C447C, #185FA5);
+    border-radius: 16px;
+    padding: 1.75rem 1.75rem 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+  }
+  .result-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    opacity: 0.65;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .result-title {
+    font-size: clamp(16px, 3vw, 20px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .result-summary {
+    font-size: 14px;
+    line-height: 1.8;
+    opacity: 0.85;
+  }
+ 
+  /* section cards */
+  .sec {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.875rem;
+  }
+  .sec-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .sec-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .sec-title { font-size: 14px; font-weight: 700; }
+ 
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; margin-bottom: 0.875rem; }
+ 
+  ul.pts { list-style: none; }
+  ul.pts li {
+    font-size: 13px;
+    color: var(--text-sub);
+    padding: 6px 0 6px 18px;
+    position: relative;
+    line-height: 1.65;
+    border-bottom: 1px solid #f0ede6;
+  }
+  ul.pts li:last-child { border-bottom: none; }
+  ul.pts li::before { content: "›"; position: absolute; left: 4px; color: var(--text-hint); font-weight: 700; }
+ 
+  /* dialogue */
+  .dialogue { border-radius: 10px; padding: 1rem; margin-bottom: 10px; }
+  .dialogue:last-child { margin-bottom: 0; }
+  .dialogue-bad { background: var(--red-light); }
+  .dialogue-good { background: var(--green-light); }
+  .dialogue-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .dialogue-bad .dialogue-label { color: var(--red-dark); }
+  .dialogue-good .dialogue-label { color: var(--green-dark); }
+  .bubble-wrap { margin-bottom: 6px; }
+  .bubble-role { font-size: 11px; color: var(--text-hint); margin-bottom: 3px; }
+  .bubble {
+    display: inline-block;
+    max-width: 90%;
+    padding: 7px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .bubble-boss { background: rgba(0,0,0,0.06); color: var(--text-sub); }
+  .bubble-member { background: rgba(255,255,255,0.8); border: 1px solid var(--border); color: var(--text); }
+ 
+  /* PDF button */
+  .pdf-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+  }
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-pdf:hover { background: var(--blue-light); border-color: var(--blue-mid); color: var(--blue-dark); }
+  .btn-pdf svg { flex-shrink: 0; }
+ 
+  /* ── PRINT / PDF STYLES ── */
+  @media print {
+    @page { size: A4; margin: 18mm 16mm; }
+    body { background: #fff; font-size: 12px; }
+    .topbar, .hero, .selector-card, .btn-row, .btn-pdf, .pdf-row, .err, .ai-loading { display: none !important; }
+    .main { max-width: 100%; padding: 0; }
+    #result { display: block !important; animation: none !important; }
+    .result-hero { background: #0C447C !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; border-radius: 8px; padding: 1.2rem; }
+    .sec { border: 1px solid #ddd; border-radius: 8px; page-break-inside: avoid; margin-bottom: 0.6rem; padding: 1rem 1.2rem; }
+    .two-col { gap: 0.6rem; }
+    .dialogue { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .dialogue-bad { background: #FCEBEB !important; }
+    .dialogue-good { background: #EAF3DE !important; }
+    .sec-icon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .result-hero * { color: #fff !important; }
+  }
+ 
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    .type-grid { grid-template-columns: repeat(3, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .hero { padding: 2rem 1.25rem 2rem; }
+  }
+  @media (max-width: 380px) {
+    .type-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+ 
+<div class="topbar">
+  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+  組織コミュニケーション改善ツール — Adstyle Corporation
+</div>
+ 
+<div class="hero">
+  <div class="hero-eyebrow">Enneagram Communication Diagnosis</div>
+  <h1>エニアグラム 上司×部下<br>コミュニケーション診断</h1>
+  <p>81通りの組み合わせから、起きやすいズレと円滑な関わり方を可視化します</p>
+</div>
+ 
+<div class="main">
+ 
+  <!-- BOSS SELECTOR -->
+  <div class="selector-card">
+    <h2>上司のタイプを選択</h2>
+    <div class="type-grid" id="boss-grid"></div>
+    <div class="selected-display" id="boss-display">未選択</div>
+  </div>
+ 
+  <!-- MEMBER SELECTOR -->
+  <div class="selector-card">
+    <h2>部下のタイプを選択</h2>
+    <div class="type-grid" id="member-grid"></div>
+    <div class="selected-display" id="member-display">未選択</div>
+  </div>
+ 
+  <div class="btn-row">
+    <button class="btn-diagnose" onclick="diagnose()">診断する</button>
+    <button class="btn-reset" onclick="resetAll()">リセット</button>
+  </div>
+  <div class="err" id="err">上司タイプと部下タイプを両方選択してください。</div>
+ 
+  <div class="ai-loading" id="ai-loading">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <p>AIが組み合わせを分析しています…少々お待ちください</p>
+  </div>
+ 
+  <div id="result"></div>
+</div>
+ 
+<script>
+const TYPES = [
+  { num:1, name:"改革する人" },
+  { num:2, name:"助ける人" },
+  { num:3, name:"達成する人" },
+  { num:4, name:"個性を求める人" },
+  { num:5, name:"調べる人" },
+  { num:6, name:"忠実な人" },
+  { num:7, name:"楽しむ人" },
+  { num:8, name:"挑戦する人" },
+  { num:9, name:"平和を望む人" }
+];
+ 
+const TYPE_DETAILS = {
+  1:{ short:"改革する人", key:"正しさ・品質・改善", strength:"基準を守り、細部まで整える力", blind:"完璧主義・正解探し・柔軟性不足", managerNeed:"基準と優先順位を明確にしたい", memberNeed:"納得できる理由と具体的な期待値がほしい" },
+  2:{ short:"助ける人", key:"貢献・関係性・感謝", strength:"相手の困りごとに気づき支える力", blind:"抱え込み・見返り期待・境界線の曖昧さ", managerNeed:"気持ちと貢献を汲み取ってほしい", memberNeed:"感謝と役割の明確さがほしい" },
+  3:{ short:"達成する人", key:"成果・評価・スピード", strength:"目標達成に向けて行動を加速させる力", blind:"結果偏重・焦り・本音の見えにくさ", managerNeed:"成果につながる行動を早く決めたい", memberNeed:"評価基準と勝ち筋を知りたい" },
+  4:{ short:"個性を求める人", key:"独自性・意味・感情", strength:"自分らしい視点で表現や企画に深みを出す力", blind:"感情の波・比較意識・納得感へのこだわり", managerNeed:"個性や意図を尊重してほしい", memberNeed:"自分の強みを活かせる余白がほしい" },
+  5:{ short:"調べる人", key:"理解・分析・専門性", strength:"情報を整理し、本質を見抜く力", blind:"抱え込み・共有不足・行動の遅れ", managerNeed:"無駄なく論理的に進めたい", memberNeed:"考える時間と十分な情報がほしい" },
+  6:{ short:"忠実な人", key:"安心・確認・リスク管理", strength:"抜け漏れやリスクを事前に察知する力", blind:"不安過多・確認依存・決断の遅れ", managerNeed:"安全に進めるための確認を重視したい", memberNeed:"判断基準と相談先が明確だと動きやすい" },
+  7:{ short:"楽しむ人", key:"可能性・展開・前向きさ", strength:"新しい選択肢を見つけ、場を前向きにする力", blind:"詰めの甘さ・飽きやすさ・楽観視", managerNeed:"停滞せず前向きに進めたい", memberNeed:"自由度と挑戦機会がほしい" },
+  8:{ short:"挑戦する人", key:"決断・主導権・突破力", strength:"強く意思決定し、困難を押し切る力", blind:"圧の強さ・支配的・弱さを見せにくい", managerNeed:"遠回りせず本音で動いてほしい", memberNeed:"信頼され、裁量を持って動きたい" },
+  9:{ short:"平和を望む人", key:"調和・受容・安定", strength:"場を落ち着かせ、全体のバランスを取る力", blind:"先送り・自己主張不足・優先順位の曖昧さ", managerNeed:"衝突を避けつつ全体を進めたい", memberNeed:"安心して意見を出せる関係がほしい" }
+};
+
+const CENTER = {1:"gut",2:"heart",3:"heart",4:"heart",5:"head",6:"head",7:"head",8:"gut",9:"gut"};
+const CENTER_LABEL = {gut:"ガッツ", heart:"ハート", head:"ヘッド"};
+
+function pairTheme(boss, member) {
+  if (boss === member) {
+    return {
+      summary:`同じタイプ同士のため、価値観や判断基準は共有しやすい一方、同じ弱点も重なりやすい組み合わせです。強みがかみ合うと推進力が出ますが、盲点が放置されると組織内で偏りが強くなります。`,
+      risk:`同じ価値観で安心しやすい反面、${TYPE_DETAILS[boss].blind}が見過ごされやすい`,
+      method:`互いの得意領域に頼りすぎず、第三の視点を意識的に入れる`
+    };
+  }
+  const bc = CENTER[boss], mc = CENTER[member];
+  if (bc === mc) {
+    return {
+      summary:`同じ${CENTER_LABEL[bc]}センター同士で、反応の起点が近く理解しやすい組み合わせです。ただし、似た感情・思考・行動パターンが増幅し、冷静な補完が入りにくい点には注意が必要です。`,
+      risk:`同じセンターの反応が重なり、議論や判断が一方向に寄りやすい`,
+      method:`共通点を活かしつつ、判断基準・感情・行動のどれが不足しているか確認する`
+    };
+  }
+  if (bc === "gut" && mc === "heart") return {summary:"行動・決断を重視する上司と、評価・関係性を重視する部下。上司の強い推進力が、部下には圧や評価不安として伝わることがあります。成果基準と承認の伝え方を整えると力を発揮しやすい関係です。", risk:"上司の強い言い方が、部下には否定や評価低下として響きやすい", method:"行動指示だけでなく、期待している理由と評価している点も言語化する"};
+  if (bc === "gut" && mc === "head") return {summary:"行動・決断を重視する上司と、確認・分析を重視する部下。上司は早く動いてほしくなり、部下は情報不足のまま進むことに不安を感じやすい組み合わせです。判断基準と期限を明確にすると進みやすくなります。", risk:"上司のスピード感が、部下には準備不足やリスク軽視に見えやすい", method:"必要情報・判断期限・相談タイミングを先に決めてから動く"};
+  if (bc === "heart" && mc === "gut") return {summary:"成果や関係性を重視する上司と、納得感や自分の感覚で動く部下。上司の期待や見せ方へのこだわりが、部下にはコントロールに感じられることがあります。目的と裁量範囲を明確にすると噛み合いやすい関係です。", risk:"上司の期待管理が、部下には過干渉や操作に感じられやすい", method:"成果基準を共有したうえで、進め方には一定の裁量を渡す"};
+  if (bc === "heart" && mc === "head") return {summary:"成果・評価・関係性を重視する上司と、分析・安全性を重視する部下。上司は反応の速さを求め、部下は根拠やリスク確認を求めやすい組み合わせです。期待値と根拠をセットで伝えると安心して動けます。", risk:"上司の期待に応えようとして、部下が不安を抱えたまま確認過多になる", method:"求める成果・判断材料・確認範囲を具体的に共有する"};
+  if (bc === "head" && mc === "gut") return {summary:"分析・安全性を重視する上司と、行動・納得感を重視する部下。上司の慎重さが部下にはブレーキに見え、部下の行動力が上司にはリスクに見えることがあります。検証範囲を決めて小さく動くと強みが噛み合います。", risk:"上司の確認が多くなり、部下が信頼されていないと感じやすい", method:"リスクを限定した小さな実行単位を決め、結果で会話する"};
+  if (bc === "head" && mc === "heart") return {summary:"分析・安全性を重視する上司と、評価・感情・関係性を重視する部下。上司の論理的な指摘が、部下には冷たさや否定として伝わることがあります。根拠と感情面のフォローを両立すると安定します。", risk:"上司の論理的フィードバックが、部下には感情面の否定として受け取られやすい", method:"事実・理由・期待を伝えたうえで、良かった点も明確に言語化する"};
+  return {summary:"互いの判断基準が異なるため、ズレは起きやすいものの、補完関係も作りやすい組み合わせです。", risk:"相手の重視点を自分の基準で評価し、誤解が生まれやすい", method:"相手が何を大事にしているかを先に確認する"};
+}
+
+function buildPreset(boss, member) {
+  const b = TYPE_DETAILS[boss];
+  const m = TYPE_DETAILS[member];
+  const theme = pairTheme(boss, member);
+  const title = `上司タイプ${boss}（${b.short}）× 部下タイプ${member}（${m.short}）`;
+  return {
+    title,
+    summary: theme.summary,
+    risks: [
+      theme.risk,
+      `上司は「${b.key}」を重視し、部下は「${m.key}」を重視するため、優先順位がズレやすい`,
+      `上司の強みである「${b.strength}」が、部下には「${b.blind}」として伝わることがある`,
+      `部下の強みである「${m.strength}」が、上司には「${m.blind}」として見えることがある`
+    ],
+    managerAdvice: [
+      `部下が求めやすい「${m.memberNeed}」を先に満たす`,
+      `指示だけでなく、目的・優先順位・期限を具体的に伝える`,
+      `部下の強みである「${m.strength}」を成果に結びつける役割を渡す`,
+      `注意するときは人格ではなく、行動・事実・次の改善に絞る`
+    ],
+    memberAdvice: [
+      `上司が重視する「${b.managerNeed}」を理解して報告する`,
+      `不安や違和感は抱え込まず、早めに小さく確認する`,
+      `自分の意見は、感覚だけでなく目的・根拠・次の行動とセットで伝える`,
+      `上司の指摘を否定ではなく、成果に近づくための調整材料として受け取る`
+    ],
+    smoothCommunication: [
+      theme.method,
+      `依頼時に「目的・期待成果・NGライン」を言語化する`,
+      `報告時は「事実・解釈・次アクション」を分けて共有する`,
+      `定期的に、今の進め方が成果と本人の成長につながっているか確認する`
+    ],
+    badExample: {
+      manager: badManagerLine(boss, member),
+      member: badMemberLine(boss, member)
+    },
+    goodExample: {
+      manager: goodManagerLine(boss, member),
+      member: goodMemberLine(boss, member)
+    },
+    organizationImpact: [
+      `上司と部下の認識ズレが蓄積し、報連相の質が下がる`,
+      `部下が上司攻略や正解探しに寄り、本来の顧客成果から意識がズレる`,
+      `強みが活かされず、成長スピードやチームの再現性が落ちる`
+    ]
+  };
+}
+
+function badManagerLine(boss, member) {
+  const lines = {
+    1:"なぜこの基準でできていないんですか？",
+    2:"あなたのためを思って言っているんです。",
+    3:"結果が出ていないなら意味がないです。",
+    4:"そのこだわり、今必要ですか？",
+    5:"根拠が弱いので一度考え直してください。",
+    6:"本当に大丈夫ですか？リスクは確認しましたか？",
+    7:"もっと前向きに考えられませんか？",
+    8:"結局、やるんですか？やらないんですか？",
+    9:"まあ、様子を見ながら進めましょう。"
+  };
+  return lines[boss];
+}
+
+function badMemberLine(boss, member) {
+  const lines = {
+    1:"正解が分からないので、動くのが怖いです…",
+    2:"こんなにやっているのに、伝わっていない気がします…",
+    3:"評価されないなら、何を頑張ればいいんだろう…",
+    4:"自分らしさを否定された気がします…",
+    5:"情報が足りないので、まだ判断できません…",
+    6:"失敗したらどうなるのか不安です…",
+    7:"細かく言われると、やる気が下がります…",
+    8:"任せてもらえていないなら、自分でやる意味がないです…",
+    9:"波風を立てたくないので、黙っておきます…"
+  };
+  return lines[member];
+}
+
+function goodManagerLine(boss, member) {
+  const b = TYPE_DETAILS[boss], m = TYPE_DETAILS[member];
+  return `今回の目的はここです。あなたの「${m.strength}」を活かしたいので、まずはこの範囲で進めて、迷ったらこの基準で判断してください。`;
+}
+
+function goodMemberLine(boss, member) {
+  const b = TYPE_DETAILS[boss];
+  return `承知しました。目的と判断基準を踏まえて進めます。迷った点は、事実・自分の仮説・次の行動に分けて共有します。`;
+}
+
+function buildAllPresets() {
+  const obj = {};
+  for (let boss = 1; boss <= 9; boss++) {
+    for (let member = 1; member <= 9; member++) {
+      obj[`${boss}-${member}`] = buildPreset(boss, member);
+    }
+  }
+  return obj;
+}
+
+const PRESET = buildAllPresets();
+
+let selectedBoss = null;
+let selectedMember = null;
+ 
+function buildGrid(containerId, role) {
+  const grid = document.getElementById(containerId);
+  TYPES.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'type-btn';
+    btn.dataset.num = t.num;
+    btn.innerHTML = `<span class="num">${t.num}</span><span class="name">${t.name}</span>`;
+    btn.onclick = () => selectType(t.num, role);
+    grid.appendChild(btn);
+  });
+}
+ 
+function selectType(num, role) {
+  if (role === 'boss') {
+    selectedBoss = num;
+    document.querySelectorAll('#boss-grid .type-btn').forEach(b => {
+      b.classList.remove('selected-boss');
+      if (parseInt(b.dataset.num) === num) b.classList.add('selected-boss');
+    });
+    document.getElementById('boss-display').innerHTML = `<strong>タイプ${num}：${TYPES[num-1].name}</strong> を選択中`;
+  } else {
+    selectedMember = num;
+    document.querySelectorAll('#member-grid .type-btn').forEach(b => {
+      b.classList.remove('selected-member');
+      if (parseInt(b.dataset.num) === num) b.classList.add('selected-member');
+    });
+    document.getElementById('member-display').innerHTML = `<strong>タイプ${num}：${TYPES[num-1].name}</strong> を選択中`;
+  }
+}
+ 
+function renderResult(d) {
+  const el = document.getElementById('result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="pdf-row">
+      <button class="btn-pdf" onclick="downloadPDF()">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h4a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        PDFでダウンロード
+      </button>
+    </div>
+ 
+    <div class="result-hero">
+      <div class="result-eyebrow">診断結果</div>
+      <div class="result-title">${d.title}</div>
+      <div class="result-summary">${d.summary}</div>
+    </div>
+ 
+    <div class="sec">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:#FAEEDA;color:#633806;">⚠</div>
+        <div class="sec-title">起きやすいコミュニケーションのズレ</div>
+      </div>
+      <ul class="pts">${d.risks.map(r=>`<li>${r}</li>`).join('')}</ul>
+    </div>
+ 
+    <div class="two-col">
+      <div class="sec">
+        <div class="sec-header">
+          <div class="sec-icon" style="background:#E6F1FB;color:#0C447C;">👔</div>
+          <div class="sec-title">上司側の注意点</div>
+        </div>
+        <ul class="pts">${d.managerAdvice.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>
+      <div class="sec">
+        <div class="sec-header">
+          <div class="sec-icon" style="background:#EAF3DE;color:#27500A;">🙋</div>
+          <div class="sec-title">部下側の注意点</div>
+        </div>
+        <ul class="pts">${d.memberAdvice.map(r=>`<li>${r}</li>`).join('')}</ul>
+      </div>
+    </div>
+ 
+    <div class="sec">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:#EEEDFE;color:#3C3489;">💬</div>
+        <div class="sec-title">円滑なコミュニケーション方法</div>
+      </div>
+      <ul class="pts">${d.smoothCommunication.map(r=>`<li>${r}</li>`).join('')}</ul>
+    </div>
+ 
+    <div class="sec">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:#FAECE7;color:#712B13;">🗣</div>
+        <div class="sec-title">会話例</div>
+      </div>
+      <div class="dialogue dialogue-bad">
+        <div class="dialogue-label">✕ 注意が必要な会話パターン</div>
+        <div class="bubble-wrap"><div class="bubble-role">上司</div><span class="bubble bubble-boss">${d.badExample.manager}</span></div>
+        <div class="bubble-wrap"><div class="bubble-role">部下</div><span class="bubble bubble-member">${d.badExample.member}</span></div>
+      </div>
+      <div class="dialogue dialogue-good">
+        <div class="dialogue-label">✓ 円滑な会話パターン</div>
+        <div class="bubble-wrap"><div class="bubble-role">上司</div><span class="bubble bubble-boss">${d.goodExample.manager}</span></div>
+        <div class="bubble-wrap"><div class="bubble-role">部下</div><span class="bubble bubble-member">${d.goodExample.member}</span></div>
+      </div>
+    </div>
+ 
+    <div class="sec">
+      <div class="sec-header">
+        <div class="sec-icon" style="background:#F1EFE8;color:#444441;">🏢</div>
+        <div class="sec-title">放置した場合の組織への影響</div>
+      </div>
+      <ul class="pts">${d.organizationImpact.map(r=>`<li>${r}</li>`).join('')}</ul>
+    </div>
+  `;
+  el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+ 
+async function fetchAI(bossNum, memberNum) {
+  const bossName = `タイプ${bossNum}：${TYPES[bossNum-1].name}`;
+  const memberName = `タイプ${memberNum}：${TYPES[memberNum-1].name}`;
+  const prompt = `あなたはエニアグラムと組織コミュニケーションの専門家です。
+上司が「${bossName}」、部下が「${memberName}」の場合の職場コミュニケーション分析を、以下のJSON形式のみで返してください。
+占い的・決定論的な表現を避け「起きやすいズレ」「注意すべきポイント」「円滑な対話」の視点で記述してください。
+{
+  "title": "上司${bossName} × 部下${memberName}",
+  "summary": "関係性の要約（2〜3文、成長の可能性も含める）",
+  "risks": ["注意点1","注意点2","注意点3","注意点4"],
+  "managerAdvice": ["上司の注意点1","上司の注意点2","上司の注意点3","上司の注意点4"],
+  "memberAdvice": ["部下の注意点1","部下の注意点2","部下の注意点3","部下の注意点4"],
+  "smoothCommunication": ["方法1","方法2","方法3","方法4"],
+  "badExample": { "manager": "上司の発言（問題のある例）", "member": "部下の心理または発言（問題のある例）" },
+  "goodExample": { "manager": "上司の発言（改善例）", "member": "部下の発言（改善例）" },
+  "organizationImpact": ["組織への影響1","組織への影響2","組織への影響3"]
+}
+JSONのみ返してください。前後に説明文・コードブロックを入れないでください。`;
+ 
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1200,
+      messages:[{ role:'user', content:prompt }]
+    })
+  });
+  const data = await resp.json();
+  const text = data.content.map(i=>i.text||'').join('');
+  const clean = text.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
+}
+ 
+async function diagnose() {
+  const err = document.getElementById('err');
+  const result = document.getElementById('result');
+  const loading = document.getElementById('ai-loading');
+ 
+  if (!selectedBoss || !selectedMember) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  result.style.display = 'none';
+ 
+  const key = `${selectedBoss}-${selectedMember}`;
+  if (PRESET[key]) {
+    renderResult(PRESET[key]);
+    return;
+  }
+ 
+  loading.style.display = 'block';
+  try {
+    const d = await fetchAI(selectedBoss, selectedMember);
+    loading.style.display = 'none';
+    renderResult(d);
+  } catch(e) {
+    loading.style.display = 'none';
+    result.style.display = 'block';
+    result.innerHTML = `<div class="sec"><p style="font-size:13px;color:#888">分析の生成中にエラーが発生しました。しばらくしてから再度お試しください。</p></div>`;
+  }
+}
+ 
+function downloadPDF() {
+  window.print();
+}
+ 
+function resetAll() {
+  selectedBoss = null;
+  selectedMember = null;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected-boss','selected-member'));
+  document.getElementById('boss-display').textContent = '未選択';
+  document.getElementById('member-display').textContent = '未選択';
+  document.getElementById('err').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('ai-loading').style.display = 'none';
+}
+ 
+buildGrid('boss-grid', 'boss');
+buildGrid('member-grid', 'member');
+</script>
+</body>
+</html>
